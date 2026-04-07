@@ -1,0 +1,1270 @@
+\documentclass[11pt,a4paper]{article}
+
+\usepackage[margin=1in]{geometry}
+\usepackage{amsmath,amssymb,amsthm,mathtools}
+\usepackage{enumitem}
+\usepackage{hyperref}
+\usepackage{booktabs}
+\usepackage{array}
+\usepackage{longtable}
+
+\newtheorem{theorem}{Theorem}[section]
+\newtheorem{proposition}[theorem]{Proposition}
+\newtheorem{corollary}[theorem]{Corollary}
+\newtheorem{lemma}[theorem]{Lemma}
+\newtheorem{definition}[theorem]{Definition}
+\newtheorem{remark}[theorem]{Remark}
+
+\newcommand{\Zmod}[1]{\mathbb{Z}/#1\mathbb{Z}}
+
+\title{Galactic Rotation from the Compact Fiber:\\
+The Gravitational Limit, $R^{16}$, and a Zero-Parameter Rotation-Curve Model}
+
+\author{A.\ R.\ Wells\\
+Dual-Frame Research Group}
+
+\date{\today}
+
+\begin{document}
+
+\maketitle
+
+\begin{abstract}
+The coordinate-time mechanism and gravitational limit derived in a companion paper~\cite{Wells2026c} from the postulates of discrete scalar motion predict a characteristic acceleration scale and coherence length at galactic scales.
+This paper obtains both quantities from the natural unit system and the inter-regional ratio $R = 156.444$ by dimensional analysis, with no calibrated galactic parameters: $a_0 = a_{\mathrm{nat}} \times N_m / R^{16} = 6.12 \times 10^{-11}$~m/s$^2$ (where $N_m = 4$ is the magnetic sector capacity and $R^{16}$ is the inter-regional exponent identified on independent structural grounds in~\cite{Wells2026c}) and $L_{\mathrm{GL}} = s_{\mathrm{nat}} \times R^{12} = 0.318$~kpc.
+The resulting rotation-curve model uses the sqrt-exponential kernel structurally induced by the second-power relation $r = \rho^2$~\cite{Wells2026b} and the covering-degree coupling law from the compact fiber~\cite{Wells2026a} ($d = 2$).
+Tested against 171 SPARC galaxies~\cite{Lelli2016}, the model achieves slightly lower median error than a fixed MOND baseline (median $\chi^2$ per point $10.71$ versus $11.25$) while using no calibrated galactic parameters.
+The covering degree $d = 2$ is confirmed by sharp empirical selection: departures to $d = 1.8$ or $d = 2.2$ degrade performance by factors of $7$--$100$.
+A radial residual analysis shows that the model achieves near-zero mean fractional residuals ($+0.6\%$ to $+0.9\%$) in the mid-to-outer disk, where baryonic-input ambiguities are plausibly reduced relative to the inner disk.
+The remaining ${\sim}10\%$ systematic error floor is shared with MOND and traced to galaxy-to-galaxy variation in mass-to-light ratios.
+The $R^{16}$ exponent that sets the galactic acceleration scale is the same exponent identified in~\cite{Wells2026c} in the context of the electromagnetic-to-gravitational hierarchy ratio, providing a cross-scale consistency check between atomic and galactic physics.
+
+This paper does not claim that the SPARC benchmark proves the compact-fiber framework; it claims that the framework, as developed in~\cite{Wells2026a,Wells2026b,Wells2026c}, yields a specific galactic rotation model with no calibrated galactic parameters, and that this model performs competitively with standard MOND on the SPARC sample.
+The coordinate-time metric passed Solar System tests in~\cite{Wells2026c}; the additive nonlocal galactic term introduced here is argued to be independently safe: explicit numerical evaluation shows that the nonlocal kernel evaluates $\tilde{g}$ at galactic scales, producing a constant extra acceleration across the Solar System that is absorbed by free fall, with a residual galactic tidal contribution of ${\sim}10^{-16}$ of Solar gravity (Appendix~\ref{app:solar-numerical}).
+\end{abstract}
+
+\tableofcontents
+
+%===================================================================
+\section{Introduction}
+\label{sec:intro}
+%===================================================================
+
+\subsection{Aim}
+
+A companion paper~\cite{Wells2026c} derived the coordinate-time mechanism for gravitation from the postulates of discrete scalar motion, demonstrated competency via Solar System tests ($\beta = \gamma = 1$, four classical tests, the equivalence principle), and identified two open items at status~\textbf{O}: the gravitational limit and the $R^{16}$ acceleration scale.
+This paper develops both into an explicit galactic rotation model and evaluates their empirical viability on the SPARC sample.
+It obtains the galactic acceleration scale and coherence length from natural units and the compact fiber structure, constructs an explicit rotation-curve model, and tests it against the SPARC sample~\cite{Lelli2016}.
+All derivations rest on the postulates and structures established in~\cite{Wells2026a,Wells2026b,Wells2026c}; we import only the items listed in~\S\ref{sec:dependency}.
+
+The galactic model is a conditional consequence of Papers~I--III plus one auxiliary assumption: exponential smoothing in the time-region radial coordinate~$\rho$.
+It is not a uniquely forced derivation from first principles.
+The auxiliary assumption is structurally motivated (\S\ref{sec:kernel}) and empirically confirmed as optimal (\S\ref{sec:kernel-scan}), but alternative smoothing forms are not excluded by the postulates alone.
+This conditionality is reflected in the status labels throughout.
+
+\subsection{What this paper does and does not do}
+\label{sec:scope}
+
+This paper:
+\begin{itemize}
+\item derives $a_0$ and $L_{\mathrm{GL}}$ from the natural unit system and the inter-regional ratio~$R$,
+\item constructs an explicit rotation-curve model with zero calibrated galactic parameters,
+\item tests against 171 SPARC galaxies with a fixed preprocessing pipeline and explicit comparison protocol,
+\item analyzes failure modes and identifies the next structural target,
+\item reports sensitivity to implementation choices (kernel power, curvature modulation, mass-to-light ratio).
+\end{itemize}
+
+This paper does not:
+\begin{itemize}
+\item derive $G$ from natural units (still~\textbf{O}),
+\item treat cosmological implications (CMB, BAO, large-scale structure),
+\item claim to replace $\Lambda$CDM,
+\item fit per-galaxy parameters,
+\item claim that the SPARC benchmark proves the compact-fiber framework.
+\end{itemize}
+
+\noindent In this paper, ``zero calibrated galactic parameters'' means that no parameters in the RST law are tuned on a per-galaxy basis or fitted to the SPARC sample; standard SPARC baryonic inputs ($\Upsilon_{\mathrm{disk}}$, $\Upsilon_{\mathrm{bulge}}$) are held fixed across all models as external observational inputs rather than calibrated theory parameters.
+
+\subsection{Dependency on companion papers}
+\label{sec:dependency}
+
+From~\cite{Wells2026a} (compact fiber):
+\begin{itemize}
+\item Fiber capacities $N_m = 4$ (magnetic), $N_e = 8$ (electric).
+\item Covering degree $d = 2$.
+\item Transport metric $1/N$ per step (Theorem~12.1 of~\cite{Wells2026a}).
+\end{itemize}
+
+From~\cite{Wells2026b} (atomic structure):
+\begin{itemize}
+\item Second-power relation $r = \rho^2$ (Proposition~7.1 of~\cite{Wells2026b}).
+\item The structural constant $6 = \mathrm{period}_{\mathrm{ref}} + e_{\mathrm{half}}$ (Proposition~6.4 of~\cite{Wells2026b}, the constant $42 = 6 \times 7$).
+\item Natural units $s_{\mathrm{nat}} = 4.559 \times 10^{-8}$~m, $t_{\mathrm{nat}} = 1.521 \times 10^{-16}$~s.
+\item Inter-regional ratio $R = 156.444$.
+\end{itemize}
+
+From~\cite{Wells2026c} (quantum and gravitational structure):
+\begin{itemize}
+\item Coordinate-time mechanism ($3v^2/c^2$ per clock time).
+\item Gravitational limit concept (\S14.9 of~\cite{Wells2026c}).
+\item Reciprocal partition and effective metric (\S14.3 of~\cite{Wells2026c}).
+\item $R^{16}$ identified in hierarchy-ratio discussion (\S14.10 of~\cite{Wells2026c}).
+\item PPN parameters $\beta = \gamma = 1$; Solar System tests passed.
+\end{itemize}
+
+\subsection{Relation to existing approaches}
+\label{sec:existing}
+
+MOND~\cite{Milgrom1983} provides an empirical interpolation function with one calibrated parameter ($a_0 = 1.2 \times 10^{-10}$~m/s$^2$) but no structural derivation of either $a_0$ or the interpolation form.
+Dark matter halos (NFW, Burkert) require 2--3 per-galaxy parameters and do not predict the baryonic Tully-Fisher relation from first principles.
+The radial acceleration relation (RAR)~\cite{McGaugh2016} is an empirical phenomenological regularity.
+The present paper offers a structural derivation from discrete scalar motion postulates, with zero calibrated parameters and specific predictions about where the model should fail.
+
+\subsection{Status discipline}
+\label{sec:status}
+
+Every model ingredient is tagged with one of:
+\begin{description}[style=nextline,leftmargin=2.5cm]
+\item[\textbf{T} --- Theorem-derived] Complete chain from imported structure. No gaps.
+\item[\textbf{S} --- Structurally inferred] Follows under explicitly stated assumptions.
+\item[\textbf{S\!f} --- Implementation-fixed] Structurally motivated, frozen before comparison, shown to be non-critical by sensitivity analysis.
+\item[\textbf{E} --- Empirically tested] Quantitative comparison with data.
+\item[\textbf{O} --- Open] Identified gap.
+\end{description}
+
+The additional label~\textbf{S\!f} distinguishes implementation choices that are frozen before comparison from quantities that are derived from the postulates.
+
+%===================================================================
+\section{The Gravitational Limit}
+\label{sec:grav-limit}
+%===================================================================
+
+\subsection{Derivation from the postulates}
+
+The scalar progression is universal outward motion at unit speed~$c$ (P5).
+Gravitation is three-dimensional scalar motion inward with speed $v^2 = GM/r$, decreasing with distance.
+At some distance $r_{\mathrm{GL}}$ from a mass concentration, the two speeds are equal; beyond $r_{\mathrm{GL}}$, the net scalar motion is outward.
+This is not a modification of gravity.
+The progression exists at all scales but is dynamically negligible where gravitation dominates (the Solar System) and becomes significant where gravitation is weak (galactic outskirts).
+\textit{Status:~\textbf{S}} (structural consequence of P5 and the gravitational speed profile).
+
+\subsection{What the gravitational limit replaces}
+
+In the standard framework, the discrepancy between observed rotation curves and Newtonian predictions is attributed to a dark matter halo providing extra mass.
+In MOND, it is attributed to a modified gravitational law below the acceleration scale~$a_0$.
+In the RST, it is attributed to neither: the ever-present scalar progression becomes dynamically significant at the gravitational limit, producing the observed flat rotation curves without extra mass or modified gravity.
+
+\subsection{Solar System safety}
+
+The nonlocal correction at Solar System radii is treated in~\S\ref{sec:solar}.
+In brief: the nonlocal kernel evaluates $\tilde{g}$ at galactic scales (not Solar System scales), producing a constant extra acceleration $g_{\mathrm{extra}} \approx 1.1 \times 10^{-10}$~m/s$^2$ across the entire Solar System.
+By the equivalence principle, this constant acceleration is undetectable in the freely falling Solar System frame.
+The residual galactic tidal contribution is ${\sim}10^{-16}$ of Solar gravity.
+The detailed argument is given in~\S\ref{sec:solar}.
+
+%===================================================================
+\section{Derivation of the Acceleration Scale}
+\label{sec:accel-scale}
+%===================================================================
+
+\subsection{The natural acceleration}
+
+The natural acceleration is
+\begin{equation}
+\label{eq:a-nat}
+a_{\mathrm{nat}} = \frac{s_{\mathrm{nat}}}{t_{\mathrm{nat}}^2} = \frac{4.559 \times 10^{-8}}{(1.521 \times 10^{-16})^2} = 1.97 \times 10^{24} \;\text{m/s}^2.
+\end{equation}
+This is the only acceleration scale available from the postulates before inter-regional conversion.
+
+\subsection{Why $R^{16}$}
+\label{sec:R16}
+
+Mass has RST dimensions $t^3/s^3$.
+Converting $a_{\mathrm{nat}}$ to conventional gravitational scales requires the inter-regional ratio~$R$ for each dimensional crossing.
+In~\cite{Wells2026c} (\S14.10), $R^{16} \approx 1.29 \times 10^{35}$ was identified on independent structural grounds as the power arising in the dimensional analysis connecting natural units to gravitational scales, in the context of the hierarchy ratio $\alpha/\alpha_G \approx 10^{36}$.
+
+The present paper examines one specific downstream consequence: the galactic acceleration scale $a_{\mathrm{nat}}/R^{16}$.
+The SPARC comparison tests whether this consequence is empirically viable, not whether $R^{16}$ is correct.
+The structural argument for the exponent~16 is given in~\cite{Wells2026c}; here it is imported, not re-derived.
+
+\textit{Status:~\textbf{S}} (imported from~\cite{Wells2026c} under stated interpretation of the dimensional chain).
+
+\subsection{The magnetic-sector factor}
+\label{sec:Nm}
+
+Gravitation is three-dimensional scalar motion, which occupies the magnetic sector of the compact fiber~\cite{Wells2026a}.
+The magnetic sector capacity $N_m = 4$ is therefore the structural factor entering the gravitational acceleration scale:
+\begin{equation}
+\label{eq:a0}
+a_0 = \frac{a_{\mathrm{nat}} \times N_m}{R^{16}} = \frac{1.97 \times 10^{24} \times 4}{1.29 \times 10^{35}} = 6.12 \times 10^{-11} \;\text{m/s}^2.
+\end{equation}
+
+The choice of $N_m$ follows from the sector assignment: gravitation is magnetic-sector motion, so the gravitational coupling involves the magnetic capacity.
+This is the same $N_m$ that determines the cross-sector screening slopes in~\cite{Wells2026b} (ionization energy, electron affinity, polarizability: all have slope $1/N_m = 1/4$).
+The factor is not selected by empirical performance; it is determined by the structural role of the magnetic sector in gravitation.
+
+\textit{Status:~\textbf{S}} (structural argument for $N_m$ as the gravitational sector factor).
+
+\subsection{Contextual comparison with MOND}
+\label{sec:mond-context}
+
+The conventional MOND acceleration scale is $a_0^{\mathrm{MOND}} = 1.2 \times 10^{-10}$~m/s$^2$~\cite{Milgrom1983}, an empirically calibrated value.
+The RST-derived scale $a_0 = 6.12 \times 10^{-11}$~m/s$^2$ is approximately half the MOND value.
+
+It is noted that applying the electric sector capacity $N_e = 8$ in place of $N_m$ gives $a_{\mathrm{nat}} \times N_e / R^{16} = 1.22 \times 10^{-10}$~m/s$^2$, within 2\% of the MOND value.
+This proximity is recorded as a contextual observation: the conventional MOND scale may correspond to the electric-sector reading of the same dimensional chain.
+It plays no role in the model specification.
+
+%===================================================================
+\section{Derivation of the Coherence Length}
+\label{sec:coherence}
+%===================================================================
+
+\subsection{$L_{\mathrm{GL}}$ from natural units and $R^{12}$}
+
+\begin{equation}
+\label{eq:LGL}
+L_{\mathrm{GL}} = s_{\mathrm{nat}} \times R^{12} = 4.559 \times 10^{-8} \times (156.444)^{12} = 0.318 \;\text{kpc}.
+\end{equation}
+
+The power~12 decomposes as $2 \times 6$, where the factor~2 is $R^2$ (one inter-regional crossing) and the factor $6 = \mathrm{period}_{\mathrm{ref}} + e_{\mathrm{half}}$ is the same structural constant that enters the $n_{\mathrm{eff}}$ law in~\cite{Wells2026b} (Proposition~6.4, the constant $42 = 6 \times 7$).
+This identification is structurally consistent but has not been derived from a closed dimensional chain.
+
+\textit{Status:~\textbf{S}} (dimensional analysis plus structural identification of the factor~6).
+
+\subsection{Physical interpretation}
+
+$L_{\mathrm{GL}}$ is the coherence scale of the gravitational-limit transition: the radial distance over which the baryonic field is nonlocally averaged to evaluate the progression-gravitation balance.
+It is not the gravitational limit distance itself (which depends on the enclosed mass profile and varies from galaxy to galaxy).
+It governs the sharpness of the transition from Newtonian-dominated to progression-dominated dynamics.
+
+%===================================================================
+\section{The RST Rotation Model}
+\label{sec:model}
+%===================================================================
+
+\subsection{Kernel shape: structurally induced by the second-power relation}
+\label{sec:kernel}
+
+The second-power relation $r = \rho^2$~(\cite{Wells2026b}, Proposition~7.1) maps the time-region radial coordinate~$\rho$ to the extension-space coordinate~$r$.
+An exponential smoothing kernel in the time region,
+\begin{equation}
+K(\rho, \rho') = \exp\!\left(-\frac{|\rho - \rho'|}{L_\rho}\right),
+\end{equation}
+maps under $r = \rho^2$ to a sqrt-exponential kernel in extension space:
+\begin{equation}
+\label{eq:kernel}
+K(r, r') = \exp\!\left(-\frac{|\sqrt{r} - \sqrt{r'}|}{L_{\mathrm{GL}}}\right).
+\end{equation}
+
+This is the natural induced kernel under the assumption of exponential smoothing in the time region.
+It is not the unique possible kernel: other time-region smoothing forms would induce different extension-space kernels.
+The assumption of exponential smoothing is motivated by the isotonic structure of the time-region potential~(\cite{Wells2026b}, \S7.3) but is not derived from it as a theorem.
+
+The kernel power scan (\S\ref{sec:kernel-scan}) confirms that the structurally induced power $p = 0.5$ lies at the empirical optimum: performance degrades monotonically for $p > 0.6$, and the linear kernel ($p = 1.0$) performs worse than MOND.
+
+\textit{Status:~\textbf{S}} (structurally induced under a stated assumption; empirically confirmed as optimal).
+
+\subsection{Coupling law from the covering degree}
+\label{sec:coupling}
+
+The covering degree $d = 2$~(\cite{Wells2026a}, Theorem~7.4) determines the coupling exponent in the effective acceleration law:
+\begin{equation}
+\label{eq:coupling}
+g_{\mathrm{extra}}(r) = \bigl[a_0 \cdot \tilde{g}(r)\bigr]^{1/d} = \sqrt{a_0 \cdot \tilde{g}(r)}.
+\end{equation}
+
+This is the unique exponent consistent with the degree-2 covering projection.
+
+\textit{Status:~\textbf{T}} (from~\cite{Wells2026a}).
+The empirical confirmation (\S\ref{sec:d-scan}) shows $d = 2.0$ sharply selected; departures to $d \neq 2$ degrade performance by factors of 7--100.
+
+\subsection{Full model specification (pure structural form)}
+\label{sec:model-spec}
+
+The pure structural RST rotation model is:
+\begin{align}
+g_{\mathrm{bar}}(r) &= \frac{v_{\mathrm{bar}}^2(r)}{r}, \label{eq:gbar} \\[4pt]
+\tilde{g}(r) &= \frac{\sum_j g_{\mathrm{bar}}(r_j)\,K(r, r_j)}{\sum_j K(r, r_j)}, \label{eq:gtilde} \\[4pt]
+g_{\mathrm{total}}(r) &= g_{\mathrm{bar}}(r) + \sqrt{a_0 \cdot \tilde{g}(r)}, \label{eq:gtotal} \\[4pt]
+v_{\mathrm{pred}}(r) &= \sqrt{g_{\mathrm{total}}(r) \cdot r}, \label{eq:vpred}
+\end{align}
+where $K(r,r')$ is given by Eq.~\eqref{eq:kernel} and $v_{\mathrm{bar}}$ is the Newtonian baryonic velocity from SPARC components (gas, disk, bulge).
+
+Parameters derived from~\cite{Wells2026a,Wells2026b,Wells2026c}:
+\begin{center}
+\begin{tabular}{llll}
+\toprule
+\textbf{Quantity} & \textbf{Value} & \textbf{Source} & \textbf{Status} \\
+\midrule
+$a_0$ & $6.12 \times 10^{-11}$ m/s$^2$ & $a_{\mathrm{nat}} \times N_m / R^{16}$ & \textbf{S} \\
+$L_{\mathrm{GL}}$ & $0.318$ kpc & $s_{\mathrm{nat}} \times R^{12}$ & \textbf{S} \\
+$d$ & $2$ & Covering degree & \textbf{T} \\
+$p$ (kernel power) & $0.5$ & From $r = \rho^2$ & \textbf{S} \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+Calibrated parameters: none.
+Implementation constants: none.
+
+This is the headline model.
+All ingredients are traced to~\cite{Wells2026a,Wells2026b,Wells2026c} with explicit status labels.
+
+\subsection{Ingredient provenance}
+\label{sec:provenance}
+
+\begin{center}
+\begin{tabular}{llll}
+\toprule
+\textbf{Ingredient} & \textbf{Source} & \textbf{Status} & \textbf{Note} \\
+\midrule
+$a_0$ & \cite{Wells2026c} & \textbf{S} & $a_{\mathrm{nat}} \times N_m / R^{16}$ \\
+$L_{\mathrm{GL}}$ & \cite{Wells2026b} & \textbf{S} & $s_{\mathrm{nat}} \times R^{12}$ \\
+$d = 2$ & \cite{Wells2026a} & \textbf{T} & Covering degree \\
+Kernel power $p = 0.5$ & \cite{Wells2026b} & \textbf{S} & From $r = \rho^2$ \\
+Kernel form (exponential in $\rho$) & assumed & \textbf{S} & Isotonic potential motivation \\
+$\Upsilon_{\mathrm{disk}} = 0.5$ & SPARC standard & \textbf{S\!f} & 3.6~$\mu$m M/L \\
+$\Upsilon_{\mathrm{bulge}} = 0.7$ & SPARC standard & \textbf{S\!f} & 3.6~$\mu$m M/L \\
+Preprocessing & SPARC standard & \textbf{S\!f} & No galaxy exclusions \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+\subsection{Optional refinement: curvature-modulated coherence length}
+\label{sec:curvature}
+
+The transport metric $1/N$ per step~(\cite{Wells2026a}, Theorem~12.1) motivates a radially varying coherence length that shortens where the baryonic profile has sharp features and lengthens where it is smooth:
+\begin{equation}
+\label{eq:Leff}
+L_{\mathrm{eff}}(r) = L_{\mathrm{GL}} \times \mathrm{clip}\!\left(1 + \eta \cdot \tanh\!\left(\hat{C}(r)\right),\; 1 - \eta,\; 1 + \eta\right),
+\end{equation}
+where $\hat{C}(r)$ is the normalized curvature of $\log g_{\mathrm{bar}}$ along radius.
+This is motivated by the fiber transport metric but is not derived from it as a theorem.
+The modulation depth $\eta$ is an implementation constant.
+
+The sensitivity analysis (Table~\ref{tab:eta}) shows the headline result is insensitive to~$\eta$:
+
+\begin{table}[h]
+\centering
+\caption{Curvature modulation sensitivity. The pure structural model ($\eta = 0$) is the headline; curvature modulation provides a marginal refinement.}
+\label{tab:eta}
+\begin{tabular}{rrl}
+\toprule
+$\eta$ & Median $\chi^2$/pt & vs.\ MOND \\
+\midrule
+0.00 & 10.71 & 0.951 \\
+0.20 & 10.59 & 0.941 \\
+0.45 & 10.43 & 0.927 \\
+0.55 & 10.36 & 0.921 \\
+0.70 & 10.66 & 0.948 \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+The entire range $\eta = 0$ to $\eta = 0.7$ performs competitively with MOND.
+The improvement from $\eta = 0$ to $\eta = 0.45$ is 2.6\%.
+The curvature modulation helps at the margin but is not responsible for the model's competitiveness.
+
+\textit{Status:~\textbf{S\!f}} (structurally motivated, implementation-fixed, non-critical by sensitivity scan).
+
+\subsection{Comparison models}
+\label{sec:comparison-models}
+
+\begin{center}
+\begin{tabular}{llll}
+\toprule
+\textbf{Model} & \textbf{Kernel} & \textbf{Parameters} & \textbf{Role} \\
+\midrule
+MOND/RAR & algebraic & 1 (empirical) & benchmark \\
+DFT-B & triangular (empirical) & 2 (calibrated) & ablation comparator \\
+RST & $\sqrt{\phantom{x}}$-exp (structurally induced) & 0 & this paper \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+MOND uses the exponential-style RAR mapping $g_{\mathrm{total}} = g_{\mathrm{bar}} / (1 - e^{-\sqrt{g_{\mathrm{bar}}/a_0^{\mathrm{MOND}}}})$ with $a_0^{\mathrm{MOND}} = 1.2 \times 10^{-10}$~m/s$^2$~\cite{Milgrom1983,McGaugh2016}.
+DFT-B uses the same coupling law as RST ($g + \sqrt{a_c \cdot \tilde{g}}$) but with a compact triangular kernel $K = \max(0, 1 - |r - r'|/L_c)$ and two calibrated parameters $(a_c, L_c)$.
+DFT-B is an intermediate nonlocal benchmark, constructed independently of the RST theoretical framework, that shares the coupling functional form but uses an empirically chosen kernel and calibrated parameters.
+It is included to isolate the contribution of the RST kernel derivation and parameter-free specification: any performance difference between DFT-B and RST is attributable to the kernel shape and parameter source, not to the coupling law.
+
+%===================================================================
+\section{Empirical Results}
+\label{sec:results}
+%===================================================================
+
+\subsection{Dataset and preprocessing}
+
+The dataset is the SPARC Rotmod\_LTG catalog~\cite{Lelli2016}: observed rotation velocities, baryonic velocity components (gas, disk, bulge), and measurement uncertainties for late-type galaxies.
+From the full catalog, 171 galaxies with at least 5 data points and positive velocity uncertainties are retained.
+No galaxies are excluded by morphological, quality, or performance criteria.
+Mass-to-light ratios are fixed at the SPARC standard values for 3.6~$\mu$m photometry: $\Upsilon_{\mathrm{disk}} = 0.5\,M_\odot/L_\odot$, $\Upsilon_{\mathrm{bulge}} = 0.7\,M_\odot/L_\odot$.
+No preprocessing is applied beyond sorting by radius.
+
+The comparison metric is $\chi^2$ per point:
+\begin{equation}
+\chi^2/\mathrm{pt} = \frac{1}{N} \sum_{i=1}^{N} \left(\frac{v_{\mathrm{obs},i} - v_{\mathrm{model},i}}{\sigma_{v,i}}\right)^2,
+\end{equation}
+where $\sigma_{v,i}$ is the reported velocity uncertainty.
+
+\subsection{Global performance}
+\label{sec:global}
+
+\begin{table}[h]
+\centering
+\caption{Global performance on 171 SPARC galaxies. The RST model uses zero calibrated galactic parameters.}
+\label{tab:global}
+\begin{tabular}{lcrrrrrr}
+\toprule
+\textbf{Model} & \textbf{Params} & \textbf{Median} & \textbf{p25} & \textbf{p75} & \textbf{p90} & \textbf{p95} & \textbf{Wins} \\
+\midrule
+MOND & 1 & 11.25 & 3.50 & 35.35 & 90.98 & 155.4 & --- \\
+DFT-B & 2 & 10.13 & --- & 41.06 & 108.4 & 150.9 & 85/171 \\
+RST & 0 & 10.71 & 3.48 & 41.74 & 96.70 & 149.3 & 87/171 \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+The RST model achieves slightly lower median error than MOND ($10.71$ vs.\ $11.25$, ratio $0.951$) while using no calibrated galactic parameters.
+The galaxy-level win count ($87/171$, $51\%$) is consistent with a population-level statistical tie (sign test $p = 0.65$), with the structural advantage being the absence of calibrated parameters.
+
+\subsection{Distribution analysis}
+\label{sec:distribution}
+
+\begin{table}[h]
+\centering
+\caption{Distribution of $\chi^2$/pt across 171 galaxies.}
+\label{tab:dist}
+\begin{tabular}{lrr}
+\toprule
+\textbf{Percentile} & \textbf{RST} & \textbf{MOND} \\
+\midrule
+p10 & 1.49 & 1.99 \\
+p25 & 3.48 & 3.50 \\
+p50 & 10.71 & 11.25 \\
+p75 & 41.74 & 35.35 \\
+p90 & 96.70 & 90.98 \\
+p95 & 149.3 & 155.4 \\
+\midrule
+$\chi^2 < 2$ (excellent) & 25 & 18 \\
+$\chi^2 < 5$ (good) & 59 & 56 \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+RST produces more excellent fits ($\chi^2 < 2$: 25 vs.\ 18) and more good fits ($\chi^2 < 5$: 59 vs.\ 56) than MOND.
+Both models show comparable tail behavior (p90 and p95 within $\sim\!7\%$).
+The median log-ratio $\log_{10}(\chi^2_{\mathrm{RST}} / \chi^2_{\mathrm{MOND}})$ is $-0.022$, indicating a slight systematic preference for RST.
+
+The models are globally competitive, but performance differs across galaxy populations: tied overall, systematically better in low-mass dwarfs and in mid-to-outer disk residuals (\S\ref{sec:radial}), weaker in massive disk-dominated spirals (\S\ref{sec:velocity}).
+
+\subsection{Covering degree confirmation}
+\label{sec:d-scan}
+
+\begin{table}[h]
+\centering
+\caption{Covering-degree scan from the canonical model state. All parameters except $d$ are held at their derived values.}
+\label{tab:d-scan}
+\begin{tabular}{rrr}
+\toprule
+$d$ & Median $\chi^2$/pt & Ratio to MOND \\
+\midrule
+1.5 & 85.6 & 7.6$\times$ \\
+1.8 & 74.3 & 6.6$\times$ \\
+\textbf{2.0} & \textbf{10.71} & \textbf{0.95}$\times$ \\
+2.2 & 1129 & 100$\times$ \\
+2.5 & 31\,660 & 2814$\times$ \\
+3.0 & 985\,442 & 87\,573$\times$ \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+The covering degree $d = 2$ is sharply selected by the SPARC benchmark: performance degrades by over an order of magnitude for modest departures from $d = 2$, and by several orders of magnitude for larger departures.
+Within the model family defined by the RST coupling law, $d = 2$ is sharply and uniquely selected by the SPARC benchmark.
+This is supportive of the compact-fiber structure~\cite{Wells2026a} insofar as the derived covering degree is sharply selected within the proposed model family, though it does not by itself constitute an independent confirmation of the underlying ontology.
+
+\subsection{Kernel power confirmation}
+\label{sec:kernel-scan}
+
+\begin{table}[h]
+\centering
+\caption{Kernel power scan from the canonical model state. All parameters except $p$ are held at their derived values.}
+\label{tab:kernel-scan}
+\begin{tabular}{rrrl}
+\toprule
+$p$ & Median $\chi^2$/pt & Ratio to MOND & Note \\
+\midrule
+0.30 & 11.15 & 0.991 & \\
+0.40 & 10.74 & 0.955 & \\
+\textbf{0.50} & \textbf{10.71} & \textbf{0.951} & $r = \rho^2$ (structural) \\
+0.60 & 11.16 & 0.992 & \\
+0.70 & 11.33 & 1.007 & loses to MOND \\
+0.80 & 11.59 & 1.030 & \\
+1.00 & 11.80 & 1.048 & linear kernel \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+The structurally derived power $p = 0.5$ lies at the empirical optimum.
+Powers above $0.6$ lose to MOND.
+The linear kernel ($p = 1.0$) is clearly worse.
+The second-power relation~\cite{Wells2026b}, together with exponential smoothing in $\rho$-space, selects the empirically preferred kernel within the tested family.
+
+%===================================================================
+\section{Performance Ceiling and Baryonic Input Limitation}
+\label{sec:ceiling}
+%===================================================================
+
+\subsection{The systematic error floor}
+
+Both RST and MOND produce $\chi^2/\mathrm{pt} \approx 10$, roughly $10\times$ the measurement noise floor ($\chi^2/\mathrm{pt} = 1$ for a perfect model with correctly estimated uncertainties).
+The median fractional measurement uncertainty is $\sigma_v / v_{\mathrm{obs}} \approx 5\%$.
+A ${\sim}15\%$ systematic model error at $5\%$ measurement precision produces $\chi^2/\mathrm{pt} \approx (0.15/0.05)^2 = 9$, consistent with the observed values.
+The systematic residual is shared by both models and is not a feature of the RST framework specifically.
+
+\subsection{Mass-to-light ratio sensitivity}
+\label{sec:ml-sensitivity}
+
+\begin{table}[h]
+\centering
+\caption{Sensitivity of the RST pure structural model to the global disk mass-to-light ratio.}
+\label{tab:ml}
+\begin{tabular}{rr}
+\toprule
+$\Upsilon_{\mathrm{disk}}$ & Median $\chi^2$/pt \\
+\midrule
+0.3 & 14.6 \\
+0.4 & 12.2 \\
+\textbf{0.5} & \textbf{10.7} \\
+0.6 & 11.2 \\
+0.7 & 14.8 \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+Varying $\Upsilon_{\mathrm{disk}}$ by $\pm 0.1$ (a 20\% change in disk mass) changes the median $\chi^2$ by 15--40\%.
+The baryonic mass model appears to be the leading identified source of systematic error, rather than the gravitational theory.
+MOND is subject to the same limitation: its $a_0$ was calibrated assuming $\Upsilon_{\mathrm{disk}} = 0.5$.
+Neither model can exceed the performance ceiling set by galaxy-to-galaxy M/L scatter without per-galaxy baryonic fitting.
+
+\subsection{Radial residual profile}
+\label{sec:radial}
+
+\begin{table}[h]
+\centering
+\caption{Mean fractional residual $(v_{\mathrm{model}} - v_{\mathrm{obs}})/v_{\mathrm{obs}}$ by normalized radius, averaged over all per-point measurements across 171 galaxies.}
+\label{tab:radial}
+\begin{tabular}{rrrrrr}
+\toprule
+$r/r_{\max}$ & RST mean & RST rms & MOND mean & MOND rms \\
+\midrule
+$0.0$--$0.2$ & $+12.6\%$ & $40.5\%$ & $+10.6\%$ & $46.5\%$ \\
+$0.2$--$0.4$ & $+3.3\%$ & $27.2\%$ & $+4.9\%$ & $29.7\%$ \\
+$0.4$--$0.6$ & $+0.9\%$ & $22.3\%$ & $+4.8\%$ & $24.6\%$ \\
+$0.6$--$0.8$ & $+0.6\%$ & $20.7\%$ & $+5.8\%$ & $22.7\%$ \\
+$0.8$--$1.0$ & $+3.5\%$ & $22.4\%$ & $+8.9\%$ & $24.3\%$ \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+RST achieves near-zero mean residuals in the mid-to-outer disk ($0.4$--$0.8\,r_{\max}$: point-pooled mean $+0.6\%$ to $+0.9\%$), the region where baryonic-input ambiguities are plausibly reduced relative to the inner disk.
+MOND systematically overpredicts by $5$--$9\%$ in the same region.
+A galaxy-level robustness check (Appendix~\ref{app:robustness}), which computes per-galaxy mean residuals and then takes the median across galaxies, confirms the same pattern: RST medians of $-2.7\%$ to $+0.1\%$ in the $0.2$--$0.8\,r_{\max}$ range, versus MOND medians of $+0.3\%$ to $+6.1\%$.
+Both models overpredict in the inner region ($+10$--$13\%$), which is dominated by baryonic input sensitivity ($\Upsilon_{\mathrm{disk}}$, bulge model).
+
+In the mid-to-outer disk, the remaining room for improvement is limited by baryonic input uncertainty; a systematic residual reduction of this scale is therefore nontrivial relative to the available headroom.
+
+%===================================================================
+\section{Failure Mode Analysis}
+\label{sec:failures}
+%===================================================================
+
+\subsection{Velocity-dependent performance}
+\label{sec:velocity}
+
+\begin{table}[h]
+\centering
+\caption{RST performance by galaxy velocity class.}
+\label{tab:velocity}
+\begin{tabular}{rrrr}
+\toprule
+$V_{\mathrm{flat}}$ (km/s) & $n$ & RST win rate & Median $\log_{10}$ ratio \\
+\midrule
+$0$--$50$ & 23 & 100\% & $-0.181$ \\
+$50$--$100$ & 63 & 57\% & $-0.032$ \\
+$100$--$150$ & 31 & 29\% & $+0.071$ \\
+$150$--$250$ & 43 & 35\% & $+0.109$ \\
+$250$--$400$ & 11 & 55\% & $-0.008$ \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+RST dominates in low-mass, gas-rich dwarfs ($V_{\mathrm{flat}} < 50$~km/s: 100\% win rate) and is competitive in giant spirals ($V_{\mathrm{flat}} > 250$~km/s).
+The deficit is concentrated in disk-dominated massive spirals ($V_{\mathrm{flat}} = 100$--$250$~km/s).
+
+\subsection{Structural interpretation}
+
+Gas-dominated dwarfs have smooth, extended baryonic profiles.
+The sqrt-exponential kernel's heavy tails correctly capture the gradual gravitational-limit transition in these systems.
+Disk-dominated massive spirals have sharp radial features (bulge--disk transition, disk truncation) that the global coherence length $L_{\mathrm{GL}}$ cannot track.
+A mass-dependent gravitational-limit distance (larger for more massive systems) would naturally improve this regime.
+This is identified as the next structural target for the program.
+
+\subsection{What would falsify the model}
+\label{sec:falsification}
+
+The model makes specific falsifiable predictions:
+\begin{enumerate}
+\item Any clean-interior dwarf galaxy ($V_{\mathrm{flat}} < 50$~km/s, no morphological complications) where RST fails with $\chi^2 > 15$ would indicate a structural failure, not a baryonic input issue.
+\item A systematic trend in residuals uncorrelated with galaxy properties would indicate a missing structural mechanism.
+\item A covering degree $d \neq 2$ required for good fits would falsify the compact fiber.
+\item If a future larger sample shifted the kernel-power optimum away from $p = 0.5$, the second-power relation would be in tension.
+\end{enumerate}
+
+%===================================================================
+\section{Cross-Scale Consistency: $R^{16}$ at Atomic and Galactic Scales}
+\label{sec:cross-scale}
+%===================================================================
+
+\subsection{$R^{16}$ in the companion paper}
+
+The companion paper~\cite{Wells2026c} (\S14.10) identified $R^{16} \approx 1.29 \times 10^{35}$ in the dimensional analysis connecting natural units to gravitational scales, in the context of the hierarchy ratio $\alpha/\alpha_G \approx 10^{36}$.
+That identification was made on structural grounds independent of galactic data.
+
+\subsection{$R^{16}$ in this paper}
+
+The galactic acceleration scale $a_0 = a_{\mathrm{nat}} \times N_m / R^{16}$ uses the same exponent.
+This is not a validation of $R^{16}$ from the galactic data---the exponent was fixed before the SPARC comparison.
+It is a cross-scale consistency check: the same structural quantity that appears in the hierarchy discussion also produces a viable galactic acceleration scale.
+
+\subsection{Structural decomposition}
+
+$R^{16} = (R^2)^8$: $R^2$ per dimensional crossing, iterated $N_e = 8$ times.
+$R^{12} = (R^2)^6$: $R^2$ per crossing, iterated $6 = \mathrm{period}_{\mathrm{ref}} + e_{\mathrm{half}}$ times.
+These decompositions are structurally consistent but not derived from a closed chain.
+The exact derivation of why the hierarchy involves $R^{16}$ rather than a nearby power requires deriving $G$ from natural units (status~\textbf{O}).
+
+\subsection{What closing the $G$ derivation would add}
+
+If $G$ were derived from natural units as $G = f(s_{\mathrm{nat}}, t_{\mathrm{nat}}, R)$, the hierarchy dissolution~(\cite{Wells2026c}, \S14.10) would close, and the galactic $a_0$ would follow as a consequence of the $G$ derivation rather than as an independent dimensional inference.
+\textit{Status:~\textbf{O}.}
+
+%===================================================================
+\section{Solar System Safety}
+\label{sec:solar}
+%===================================================================
+
+The RST model adds a correction $\sqrt{a_0 \cdot \tilde{g}(r)}$ to the Newtonian baryonic acceleration.
+This section shows that this correction does not produce detectable effects on planetary orbits, through two independent mechanisms.
+
+\subsection{Mechanism 1: Nonlocal averaging evaluates the galactic field, not the Solar field}
+
+The nonlocal kernel (Eq.~\ref{eq:kernel}) averages the baryonic field over a coherence scale $L_{\mathrm{GL}} = 0.318$~kpc $= 65\,600$~AU.
+This is far larger than the Sun's gravitational dominance sphere: the Sun's gravity exceeds the Milky Way background field ($g_{\mathrm{gal}} \approx 2 \times 10^{-10}$~m/s$^2$ at $R_\odot = 8$~kpc) only out to $r \approx \sqrt{GM_\odot / g_{\mathrm{gal}}} \approx 9\,800$~AU $\approx 0.05$~pc.
+Beyond this radius, the galactic field dominates.
+
+When the kernel is evaluated at any Solar System radius, the vast majority of its weight falls on galactic-scale distances where $g_{\mathrm{bar}} \approx g_{\mathrm{gal}}$.
+The nonlocal smoothed field at the Sun's position is therefore set by the galactic baryonic field, not by the Sun's local field:
+\begin{equation}
+\tilde{g}\big|_{\mathrm{Solar\;System}} \approx g_{\mathrm{gal}} \approx \frac{v_{\mathrm{circ}}^2}{R_\odot} \approx 2.0 \times 10^{-10} \;\text{m/s}^2.
+\end{equation}
+
+The resulting extra acceleration is:
+\begin{equation}
+g_{\mathrm{extra}} = \sqrt{a_0 \cdot g_{\mathrm{gal}}} = \sqrt{6.12 \times 10^{-11} \times 2.0 \times 10^{-10}} \approx 1.1 \times 10^{-10} \;\text{m/s}^2.
+\end{equation}
+
+Crucially, $g_{\mathrm{extra}}$ is \textit{constant} across the entire Solar System: it varies only on kiloparsec scales (the scale of the galactic field gradient), not on AU scales.
+Explicit numerical evaluation on a Milky Way rotation curve model (Appendix~\ref{app:solar-numerical}, Table~\ref{tab:solar-numerical}) confirms that $\tilde{g}$ is constant to a relative precision of $3.2 \times 10^{-8}$ across $\pm 40$~AU, and the variation in $g_{\mathrm{extra}}$ is $1.8 \times 10^{-18}$~m/s$^2$.
+
+\subsection{Mechanism 2: A constant acceleration is absorbed by free fall}
+
+The Solar System is in free fall in the galactic gravitational field.
+By the equivalence principle (Proposition~14.1 of~\cite{Wells2026c}), a uniform external acceleration does not affect the internal dynamics of a freely falling system.
+The constant $g_{\mathrm{extra}} \approx 1.1 \times 10^{-10}$~m/s$^2$ affects the Sun's orbit around the galactic center but does \textit{not} produce anomalous precession, semi-major axis drift, or eccentricity evolution in planetary orbits.
+
+The residual effect comes from the galactic tidal gradient of $g_{\mathrm{extra}}$ across the Solar System.
+The galactic field gradient is $dg_{\mathrm{gal}}/dR \approx g_{\mathrm{gal}}/R_\odot \approx 8 \times 10^{-31}$~m/s$^2$/m.
+The tidal variation of $g_{\mathrm{extra}}$ across the Solar System ($\sim\!40$~AU) is:
+\begin{equation}
+\Delta g_{\mathrm{extra}} \approx \frac{1}{2}\sqrt{\frac{a_0}{g_{\mathrm{gal}}}} \cdot \frac{g_{\mathrm{gal}}}{R_\odot} \cdot 40\;\mathrm{AU} \approx 1.3 \times 10^{-18} \;\text{m/s}^2.
+\end{equation}
+
+This is $\sim\!2 \times 10^{-16}$ of Solar gravity at 1~AU---many orders of magnitude below any measurement threshold.
+
+\subsection{Summary}
+
+\begin{center}
+\begin{tabular}{lll}
+\toprule
+\textbf{Effect} & \textbf{Magnitude} & \textbf{Detectable?} \\
+\midrule
+$g_{\mathrm{extra}}$ at Sun's position & $1.1 \times 10^{-10}$ m/s$^2$ & No (constant, free fall) \\
+Tidal variation across Solar System & $1.3 \times 10^{-18}$ m/s$^2$ & No ($10^{-16}$ of $g_\odot$) \\
+Anomalous planetary precession & $\sim\!0$ & No \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+The PPN parameters $\beta = \gamma = 1$~\cite{Wells2026c} are properties of the RST effective metric and remain secure.
+The nonlocal correction is a separate, additive term that does not modify the metric structure.
+The Solar System tests reported in~\cite{Wells2026c} validate the coordinate-time metric; the nonlocal term derived in this paper is shown here to be independently safe by the mechanisms above.
+
+\textit{Status:~\textbf{S}.}
+The safety follows from two arguments (nonlocal averaging at galactic scales; equivalence principle in the freely falling Solar System frame), each supported by explicit numerical computation (Appendix~\ref{app:solar-numerical}).
+The residual galactic tidal contribution is ${\sim}10^{-16}$ of Solar gravity.
+The status is~\textbf{S} rather than~\textbf{T} because the computation uses a simplified Milky Way rotation curve model rather than a fully realistic mass distribution; the conclusion is expected to be robust to the Milky Way model but has not been verified against detailed galactic mass models.
+
+%===================================================================
+\section{Status Discipline}
+\label{sec:status-table}
+%===================================================================
+
+\begin{table}[h]
+\centering
+\caption{Derivation status of all model ingredients and empirical claims.}
+\label{tab:status}
+\begin{tabular}{llp{6.5cm}}
+\toprule
+\textbf{Claim} & \textbf{Status} & \textbf{Note} \\
+\midrule
+\multicolumn{3}{l}{\textit{Theorem-derived}} \\
+Covering degree $d = 2$ & \textbf{T} & \cite{Wells2026a}, Theorem~7.4 \\
+Solar System safety & \textbf{S} & Nonlocal term constant across Solar System (Appendix~\ref{app:solar-numerical}); tidal residual $\sim\!10^{-16}$ of $g_\odot$, \S\ref{sec:solar} \\
+\addlinespace
+\multicolumn{3}{l}{\textit{Structurally inferred}} \\
+$a_0 = a_{\mathrm{nat}} \times N_m / R^{16}$ & \textbf{S} & Dimensional analysis, \S\ref{sec:accel-scale} \\
+$L_{\mathrm{GL}} = s_{\mathrm{nat}} \times R^{12}$ & \textbf{S} & Dimensional analysis, \S\ref{sec:coherence} \\
+Sqrt-exponential kernel ($p = 0.5$) & \textbf{S} & From $r = \rho^2$, \S\ref{sec:kernel} \\
+Gravitational limit existence & \textbf{S} & From P5 + gravitation, \S\ref{sec:grav-limit} \\
+$N_m$ as gravitational sector factor & \textbf{S} & Sector assignment, \S\ref{sec:Nm} \\
+$R^{16}$ exponent & \textbf{S} & Imported from~\cite{Wells2026c} \\
+\addlinespace
+\multicolumn{3}{l}{\textit{Implementation-fixed}} \\
+Exponential kernel form in $\rho$-space & \textbf{S\!f} & Assumed, \S\ref{sec:kernel} \\
+$\Upsilon_{\mathrm{disk}} = 0.5$, $\Upsilon_{\mathrm{bulge}} = 0.7$ & \textbf{S\!f} & SPARC standard \\
+Curvature modulation (optional) & \textbf{S\!f} & Non-critical, \S\ref{sec:curvature} \\
+\addlinespace
+\multicolumn{3}{l}{\textit{Empirically tested}} \\
+Median $\chi^2 = 10.71$ competitive with MOND & \textbf{E} & 0 params, \S\ref{sec:global} \\
+$d = 2$ sharply confirmed & \textbf{E} & \S\ref{sec:d-scan} \\
+$p = 0.5$ confirmed as optimum & \textbf{E} & \S\ref{sec:kernel-scan} \\
+Velocity-dependent pattern & \textbf{E} & \S\ref{sec:velocity} \\
+Performance ceiling traced to baryonic input & \textbf{E} & \S\ref{sec:ceiling} \\
+\addlinespace
+\multicolumn{3}{l}{\textit{Open}} \\
+$G$ from natural units & \textbf{O} & Required to close hierarchy \\
+Mass-dependent gravitational limit & \textbf{O} & Would improve massive spirals \\
+Cosmological implications & \textbf{O} & CMB, BAO, lensing \\
+Extension to ellipticals and clusters & \textbf{O} & \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+%===================================================================
+\section{Conclusion}
+\label{sec:conclusion}
+%===================================================================
+
+This paper does not claim that the SPARC benchmark proves the compact-fiber framework.
+It claims that the framework, as developed in~\cite{Wells2026a,Wells2026b,Wells2026c}, yields a specific galactic rotation model with no calibrated galactic parameters, and that this model performs competitively with standard MOND on the SPARC sample.
+
+The derivation chain:
+\begin{quote}
+\noindent
+Postulates (P1--P5) \\
+$\;\to$ Compact fiber~\cite{Wells2026a}: $d = 2$, $N_m = 4$, $N_e = 8$ \\
+$\;\to$ Second-power relation~\cite{Wells2026b}: $r = \rho^2$ \\
+$\;\to$ Structural constant~\cite{Wells2026b}: $6 = \mathrm{period}_{\mathrm{ref}} + e_{\mathrm{half}}$ \\
+$\;\to$ Coordinate-time mechanism~\cite{Wells2026c}: $3v^2/c^2$ \\
+$\;\to$ $R^{16}$ hierarchy exponent~\cite{Wells2026c} \\
+$\;\to$ Gravitational limit: progression $=$ gravitation at $r_{\mathrm{GL}}$ \\
+$\;\to$ Derived scales: $a_0 = a_{\mathrm{nat}} \times N_m / R^{16}$, $L_{\mathrm{GL}} = s_{\mathrm{nat}} \times R^{12}$ \\
+$\;\to$ Kernel shape: $\exp(-|\sqrt{r} - \sqrt{r'}|/L)$ from $r = \rho^2$ \\
+$\;\to$ Coupling law: $g + \sqrt{a_0 \cdot \tilde{g}}$ from $d = 2$ \\
+$\;\to$ 171-galaxy test: median $\chi^2 = 10.71$ (vs.\ MOND $11.25$)
+\end{quote}
+
+Every ingredient in the headline model is either imported from~\cite{Wells2026a,Wells2026b,Wells2026c}, structurally inferred from them under stated assumptions, or fixed by the explicitly declared auxiliary assumption and implementation choices recorded in the status table (\S\ref{sec:status-table}).
+No parameters are calibrated.
+The model's performance signature---dominant in gas-rich dwarfs, competitive in giant spirals, deficit in disk-dominated massive spirals---identifies the mass-dependent gravitational limit as the next structural target.
+
+The model's residuals are dominated by baryonic input uncertainty (galaxy-to-galaxy M/L variation), not by the gravitational theory.
+In the mid-to-outer disk, where baryonic-input ambiguities are plausibly reduced relative to the inner disk, RST achieves near-zero mean fractional residuals in both point-pooled and galaxy-level analyses (\S\ref{sec:radial}, Appendix~\ref{app:robustness}), while MOND systematically overpredicts by $3$--$6\%$.
+
+%===================================================================
+\appendix
+%===================================================================
+
+\section{Reproducibility Protocol}
+\label{app:reproducibility}
+
+This appendix specifies every operational detail needed to reproduce the headline results from the SPARC data files and the stated model parameters.
+
+\subsection{Data source and galaxy selection}
+
+The rotation-curve data are from the SPARC Rotmod\_LTG catalog~\cite{Lelli2016}, distributed as individual \texttt{.dat} files (one per galaxy) in the \texttt{Rotmod\_LTG/} directory.
+Each file contains 8 whitespace-separated columns:
+\begin{center}
+\texttt{Rad~~Vobs~~errV~~Vgas~~Vdisk~~Vbul~~SBdisk~~SBbul}
+\end{center}
+with units kpc, km/s, km/s, km/s, km/s, km/s, $L_\odot$/pc$^2$, $L_\odot$/pc$^2$.
+
+Galaxy inclusion rule: a galaxy is included if, after dropping rows with missing values and rows with $\texttt{errV} \leq 0$, at least 5 data points remain.
+This yields 171 galaxies.
+No galaxies are excluded by morphological type, data quality flag, or model performance.
+Files are sorted alphabetically; the galaxy list is fully determined by the inclusion rule applied to the SPARC distribution.
+
+\subsection{Baryonic velocity construction}
+
+The baryonic circular velocity at each radius is:
+\begin{equation}
+\label{eq:vbar}
+v_{\mathrm{bar}}(r) = \sqrt{\Upsilon_{\mathrm{disk}}\,v_{\mathrm{disk}}^2(r) + \Upsilon_{\mathrm{bulge}}\,v_{\mathrm{bulge}}^2(r) + v_{\mathrm{gas}}^2(r)},
+\end{equation}
+where $v_{\mathrm{gas}}$, $v_{\mathrm{disk}}$, $v_{\mathrm{bulge}}$ are the SPARC columns \texttt{Vgas}, \texttt{Vdisk}, \texttt{Vbul} respectively, and the mass-to-light ratios are $\Upsilon_{\mathrm{disk}} = 0.5$, $\Upsilon_{\mathrm{bulge}} = 0.7$ (fixed, SPARC standard at 3.6~$\mu$m).
+Negative SPARC velocity components (which can arise from counter-rotating gas) are clipped to zero before squaring.
+Bulgeless galaxies have $v_{\mathrm{bulge}} = 0$ at all radii.
+
+The baryonic acceleration in SI units is:
+\begin{equation}
+\label{eq:gbar-SI}
+g_{\mathrm{bar}}(r) = \frac{(v_{\mathrm{bar}} \times 10^3)^2}{r \times 3.0857 \times 10^{19}} \quad [\mathrm{m/s}^2],
+\end{equation}
+where $v_{\mathrm{bar}}$ is in km/s and $r$ is in kpc.
+
+\subsection{RST model evaluation}
+\label{app:rst-algorithm}
+
+The RST model is evaluated on the discrete observed radii only (no interpolation).
+The algorithm for each galaxy:
+
+\begin{enumerate}
+\item Read $\{r_i, v_{\mathrm{obs},i}, \sigma_{v,i}, v_{\mathrm{gas},i}, v_{\mathrm{disk},i}, v_{\mathrm{bulge},i}\}$ for $i = 1, \ldots, N$.
+\item Compute $v_{\mathrm{bar},i}$ via Eq.~\eqref{eq:vbar}.
+\item Compute $g_{\mathrm{bar},i}$ via Eq.~\eqref{eq:gbar-SI}.
+\item Discard any point with non-finite $r$, $g_{\mathrm{bar}}$, or $g_{\mathrm{bar}} \leq 0$. Sort remaining points by ascending~$r$.
+\item For each point~$i$, compute:
+\begin{equation}
+\tilde{g}_i = \frac{\sum_{j} g_{\mathrm{bar},j} \cdot \exp\!\bigl(-|\sqrt{r_i} - \sqrt{r_j}|/L_{\mathrm{GL}}\bigr)}{\sum_{j} \exp\!\bigl(-|\sqrt{r_i} - \sqrt{r_j}|/L_{\mathrm{GL}}\bigr)},
+\end{equation}
+where the sums run over all $N$ valid points (including $j = i$), and $r$ is in kpc.
+\item Compute $g_{\mathrm{total},i} = g_{\mathrm{bar},i} + \sqrt{\max(a_0 \cdot \max(\tilde{g}_i, 0),\; 0)}$.
+\item Compute $v_{\mathrm{pred},i} = \sqrt{\max(g_{\mathrm{total},i} \cdot r_i \cdot 3.0857 \times 10^{19},\; 0)} \;/\; 10^3$ \quad [km/s].
+\end{enumerate}
+
+Parameters: $a_0 = 6.1225 \times 10^{-11}$~m/s$^2$, $L_{\mathrm{GL}} = 0.31757$~kpc.
+
+\subsection{MOND benchmark evaluation}
+
+The MOND benchmark uses the exponential-style RAR interpolation:
+\begin{equation}
+\label{eq:mond-alg}
+g_{\mathrm{total}} = \frac{g_{\mathrm{bar}}}{1 - \exp\!\bigl(-\!\sqrt{g_{\mathrm{bar}} / a_0^{\mathrm{MOND}}}\bigr)},
+\end{equation}
+with $a_0^{\mathrm{MOND}} = 1.2 \times 10^{-10}$~m/s$^2$.
+The baryonic acceleration $g_{\mathrm{bar}}$ is constructed identically to the RST model (Eq.~\ref{eq:gbar-SI}, same $\Upsilon$ values).
+The predicted velocity is $v_{\mathrm{pred}} = \sqrt{g_{\mathrm{total}} \cdot r}$ in the same units.
+
+\subsection{DFT-B ablation comparator}
+
+DFT-B uses the same coupling law as RST ($g_{\mathrm{total}} = g_{\mathrm{bar}} + \sqrt{a_c \cdot \tilde{g}}$) but with a compact triangular kernel:
+\begin{equation}
+K_{\mathrm{DFT\text{-}B}}(r, r') = \max\!\bigl(0,\; 1 - |r - r'|/L_c\bigr),
+\end{equation}
+and two calibrated parameters $(a_c, L_c)$ obtained by minimizing the median $\chi^2$/pt on the full 171-galaxy sample via grid search: $a_c \in \{2 \times 10^{-11}, \ldots, 8 \times 10^{-10}\}$ (25 log-spaced values), $L_c \in \{0.3, \ldots, 15.0\}$~kpc (25 linearly spaced values).
+The baryonic input construction is identical to the RST model.
+
+\subsection{Metric definitions}
+
+\begin{align}
+\chi^2/\mathrm{pt} &= \frac{1}{N}\sum_{i=1}^{N}\left(\frac{v_{\mathrm{obs},i} - v_{\mathrm{pred},i}}{\sigma_{v,i}}\right)^{\!2}, \label{eq:chi2} \\[4pt]
+\text{Win (RST vs.\ MOND)} &: \quad \chi^2_{\mathrm{RST}} < \chi^2_{\mathrm{MOND}} \;\text{for that galaxy.} \label{eq:win}
+\end{align}
+
+The sign test $p$-value is the two-sided binomial probability of observing at least as extreme a split under the null hypothesis of equal performance.
+Ties ($\chi^2_{\mathrm{RST}} = \chi^2_{\mathrm{MOND}}$ to machine precision) do not occur in practice.
+
+\subsection{Scan protocols}
+
+All scans vary one parameter while holding all others at the canonical values ($a_0 = 6.1225 \times 10^{-11}$, $L_{\mathrm{GL}} = 0.31757$~kpc, $p = 0.5$, $d = 2$, $\eta = 0$).
+
+Covering-degree scan: $d \in \{1.5, 1.8, 2.0, 2.2, 2.5, 3.0\}$.
+
+Kernel-power scan: $p \in \{0.30, 0.40, 0.50, 0.60, 0.70, 0.80, 1.00\}$.
+
+Curvature-modulation scan: $\eta \in \{0.00, 0.10, 0.20, 0.30, 0.45, 0.55, 0.70\}$.
+
+Mass-to-light scan: $\Upsilon_{\mathrm{disk}} \in \{0.3, 0.4, 0.5, 0.6, 0.7\}$ with $\Upsilon_{\mathrm{bulge}} = 0.7$ fixed.
+
+\subsection{Radial residual binning}
+
+The fractional residual at each data point is $(v_{\mathrm{pred}} - v_{\mathrm{obs}})/v_{\mathrm{obs}}$.
+For the radial profile (Table~\ref{tab:radial}), each data point's normalized radius is $r/r_{\max}$ where $r_{\max}$ is the largest observed radius in that galaxy.
+Points are pooled across all 171 galaxies and binned into five equal-width bins: $[0, 0.2)$, $[0.2, 0.4)$, $[0.4, 0.6)$, $[0.6, 0.8)$, $[0.8, 1.0]$.
+Mean and rms are computed within each bin.
+
+\subsection{$V_{\mathrm{flat}}$ definition}
+
+For the velocity-bin analysis (Table~\ref{tab:velocity}), $V_{\mathrm{flat}}$ is defined as the median of $v_{\mathrm{obs}}$ over the outer quarter of each galaxy's radial range (the last $\max(3, N/4)$ data points, sorted by radius).
+
+\subsection{Code and data availability}
+
+The complete analysis code is available at\\\texttt{github.com/arwells-research/compact-fiber-galactic-rotation}.
+The repository contains:
+the SPARC Rotmod\_LTG data files under \texttt{data/sparc/Rotmod\_LTG/} with SHA-256 checksum verification;
+the RST model implementation in \texttt{src/rst\_model.py};
+the MOND and DFT-B implementations in \texttt{src/models.py};
+a machine-readable CSV file of per-galaxy results (Appendix~\ref{app:galaxies}) as \texttt{rst\_sparc\_results.csv};
+and experiment scripts in \texttt{experiments/} that regenerate all tables in this paper.
+
+To reproduce the headline results from the raw SPARC data:
+\begin{verbatim}
+  cd experiments && python run_rst_final.py
+\end{verbatim}
+This single command reads the SPARC files, applies the inclusion rule (\S\ref{app:reproducibility}), evaluates RST, MOND, and DFT-B on all qualifying galaxies, and outputs the summary statistics, scan tables, and per-galaxy CSV.
+
+\section{Galaxy-Level Residual Robustness Check}
+\label{app:robustness}
+
+The radial residual profile in Table~\ref{tab:radial} pools all per-point measurements across 171 galaxies, which could be dominated by larger or more densely sampled galaxies.
+As a robustness check, this appendix computes the same radial profile using galaxy-level averaging: for each galaxy, the mean fractional residual is computed within each radial bin, and the median across galaxies is reported.
+
+\begin{table}[h]
+\centering
+\caption{Galaxy-level median of per-galaxy mean fractional residuals, by normalized radius. Compare with the point-pooled Table~\ref{tab:radial}.}
+\label{tab:radial-robust}
+\begin{tabular}{rrrr}
+\toprule
+$r/r_{\max}$ & RST median & MOND median & $n_{\mathrm{gal}}$ \\
+\midrule
+$0.0$--$0.2$ & $+8.1\%$ & $+7.4\%$ & 124 \\
+$0.2$--$0.4$ & $+0.1\%$ & $+0.3\%$ & 139 \\
+$0.4$--$0.6$ & $-2.5\%$ & $+1.5\%$ & 136 \\
+$0.6$--$0.8$ & $-2.7\%$ & $+3.0\%$ & 126 \\
+$0.8$--$1.0$ & $+1.8\%$ & $+6.1\%$ & 160 \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+The galaxy-level analysis confirms the point-pooled pattern: RST achieves near-zero or slightly negative median residuals in the mid-to-outer disk ($0.2$--$0.8\,r_{\max}$: medians $-2.7\%$ to $+0.1\%$), while MOND systematically overpredicts ($+0.3\%$ to $+6.1\%$).
+The conclusion is robust to the averaging method.
+
+\section{DFT-B Calibrated Parameters}
+\label{app:dftb}
+
+The DFT-B ablation comparator was calibrated by grid search over $a_c \in \{2.0 \times 10^{-11}, \ldots, 8.0 \times 10^{-10}\}$ (25 log-spaced values) and $L_c \in \{0.3, \ldots, 15.0\}$~kpc (25 linearly spaced values), minimizing the median $\chi^2$/pt across all 171 galaxies.
+
+Selected best-fit parameters: $a_c = 5.87 \times 10^{-11}$~m/s$^2$, $L_c = 11.32$~kpc.
+Resulting median $\chi^2$/pt $= 10.13$.
+
+\section{Solar System Numerical Computation}
+\label{app:solar-numerical}
+
+This appendix provides the explicit numerical evaluation supporting the Solar System safety argument of~\S\ref{sec:solar}.
+
+The computation evaluates $\tilde{g}$ at the Sun's galactic position ($R = 8$~kpc) using a flat Milky Way rotation curve ($v_{\mathrm{circ}} = 220$~km/s for $R > 1$~kpc, rising linearly for $R < 1$~kpc) discretized on 600 radial points from $R = 0.01$ to $R = 30$~kpc.
+The RST kernel $K(R, R') = \exp(-|\sqrt{R} - \sqrt{R'}|/L_{\mathrm{GL}})$ is evaluated with $L_{\mathrm{GL}} = 0.31757$~kpc.
+
+\begin{table}[h]
+\centering
+\caption{$\tilde{g}$ and $g_{\mathrm{extra}}$ at six positions spanning the Solar System, evaluated on the galactic rotation curve.
+All positions are within $\pm 40$~AU of $R_\odot = 8$~kpc.}
+\label{tab:solar-numerical}
+\begin{tabular}{rrr}
+\toprule
+\textbf{Offset from $R_\odot$} & $\tilde{g}$ (m/s$^2$) & $g_{\mathrm{extra}}$ (m/s$^2$) \\
+\midrule
+$-10$ AU & $2.0294 \times 10^{-10}$ & $1.1147 \times 10^{-10}$ \\
+$-1$ AU & $2.0294 \times 10^{-10}$ & $1.1147 \times 10^{-10}$ \\
+$0$ (exact) & $2.0294 \times 10^{-10}$ & $1.1147 \times 10^{-10}$ \\
+$+1$ AU & $2.0294 \times 10^{-10}$ & $1.1147 \times 10^{-10}$ \\
+$+10$ AU & $2.0294 \times 10^{-10}$ & $1.1147 \times 10^{-10}$ \\
+$+40$ AU & $2.0294 \times 10^{-10}$ & $1.1147 \times 10^{-10}$ \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+The maximum relative variation in $\tilde{g}$ across $\pm 40$~AU is $3.2 \times 10^{-8}$.
+The variation in $g_{\mathrm{extra}}$ is $1.8 \times 10^{-18}$~m/s$^2$, which is $2.4 \times 10^{-16}$ of Solar gravity at 1~AU ($5.93 \times 10^{-3}$~m/s$^2$).
+
+The kernel weight decomposition at $R = 8$~kpc:
+\begin{center}
+\begin{tabular}{lrr}
+\toprule
+\textbf{Region} & \textbf{Weight fraction} & \textbf{Contribution to $\tilde{g}$} \\
+\midrule
+$R < 1$ kpc (inner galaxy) & 0.22\% & 1.2\% \\
+$1$--$15$ kpc (near Sun) & 97.0\% & 97.6\% \\
+$R > 15$ kpc (outer galaxy) & 2.8\% & 1.2\% \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+The dominant contribution to $\tilde{g}$ comes from the galactic field in the $1$--$15$~kpc range around the Sun's position; the inner galaxy and outer galaxy each contribute ${\sim}1\%$.
+The Sun's own gravitational field does not appear in this computation because the galactic rotation curve describes the smooth baryonic field of the disk, not individual stellar fields.
+The RST model operates on the galactic-scale baryonic profile; the Sun is one of ${\sim}10^{11}$ stars contributing to that smooth field.
+
+The galactic tidal gradient of the extra acceleration:
+\begin{equation}
+\frac{dg_{\mathrm{extra}}}{dR} = \frac{1}{2}\sqrt{\frac{a_0}{\tilde{g}}} \cdot \frac{d\tilde{g}}{dR} \approx 2.4 \times 10^{-31} \;\text{m/s}^2\text{/m}.
+\end{equation}
+Over 40~AU ($6 \times 10^{12}$~m): $\Delta g_{\mathrm{extra}} \approx 1.4 \times 10^{-18}$~m/s$^2$.
+
+This computation can be reproduced using the script \texttt{experiments/run\_solar\_safety.py} in the repository.
+
+\section{Per-Galaxy Results}
+\label{app:galaxies}
+
+\begin{longtable}{lrrrrrl}
+\caption{Per-galaxy $\chi^2$/pt for the RST pure structural model and MOND baseline on 171 SPARC galaxies.}
+\label{tab:galaxies}\\
+\toprule
+\textbf{Galaxy} & $N$ & $V_{\mathrm{flat}}$ & $\chi^2_{\mathrm{RST}}$ & $\chi^2_{\mathrm{MOND}}$ & $\log_{10}$ ratio & Winner \\
+\midrule
+\endfirsthead
+\toprule
+\textbf{Galaxy} & $N$ & $V_{\mathrm{flat}}$ & $\chi^2_{\mathrm{RST}}$ & $\chi^2_{\mathrm{MOND}}$ & $\log_{10}$ ratio & Winner \\
+\midrule
+\endhead
+\bottomrule
+\endfoot
+CamB                 &   9 &   16.8 &    79.68 &   108.20 & -0.133 & RST \\
+D564-8               &   6 &   24.0 &     7.72 &    18.30 & -0.375 & RST \\
+D631-7               &  16 &   58.0 &    16.75 &    30.06 & -0.254 & RST \\
+DDO064               &  14 &   46.4 &     0.34 &     0.36 & -0.034 & RST \\
+DDO154               &  12 &   47.4 &    40.05 &    89.15 & -0.347 & RST \\
+DDO161               &  31 &   66.8 &    67.26 &   149.63 & -0.347 & RST \\
+DDO168               &  10 &   54.8 &    16.64 &    30.06 & -0.257 & RST \\
+DDO170               &   8 &   60.0 &    45.50 &   152.46 & -0.525 & RST \\
+ESO079-G014          &  15 &  177.0 &    15.30 &     7.99 & +0.282 & MOND \\
+ESO116-G012          &  15 &  111.0 &    24.06 &    12.89 & +0.271 & MOND \\
+ESO444-G084          &   7 &   62.7 &    41.10 &    27.78 & +0.170 & MOND \\
+ESO563-G021          &  30 &  315.0 &    46.84 &    53.53 & -0.058 & RST \\
+F561-1               &   6 &   50.4 &    27.21 &    40.20 & -0.169 & RST \\
+F563-1               &  17 &  111.2 &     4.81 &     2.78 & +0.238 & MOND \\
+F563-V1              &   6 &   28.6 &    23.23 &    34.37 & -0.170 & RST \\
+F563-V2              &  10 &  118.0 &     5.95 &     4.33 & +0.138 & MOND \\
+F565-V2              &   7 &   78.5 &     3.64 &     1.09 & +0.522 & MOND \\
+F567-2               &   5 &   48.1 &     2.98 &     7.11 & -0.377 & RST \\
+F568-1               &  12 &  133.0 &     9.71 &     6.81 & +0.154 & MOND \\
+F568-3               &  18 &  112.0 &     2.68 &     2.78 & -0.016 & RST \\
+F568-V1              &  15 &  113.0 &    12.83 &     9.39 & +0.135 & MOND \\
+F571-8               &  13 &  140.0 &    43.88 &    40.57 & +0.034 & MOND \\
+F571-V1              &   7 &   83.9 &     0.25 &     0.78 & -0.501 & RST \\
+F574-1               &  14 &   99.5 &     8.18 &     3.52 & +0.367 & MOND \\
+F574-2               &   5 &   36.0 &    15.82 &    23.29 & -0.168 & RST \\
+F579-V1              &  14 &  114.0 &     4.50 &     3.42 & +0.119 & MOND \\
+F583-1               &  25 &   82.5 &     6.05 &     3.48 & +0.240 & MOND \\
+F583-4               &  12 &   67.2 &     0.09 &     1.31 & -1.153 & RST \\
+IC2574               &  34 &   64.5 &   102.53 &   238.45 & -0.367 & RST \\
+IC4202               &  32 &  244.0 &    44.97 &    37.41 & +0.080 & MOND \\
+KK98-251             &  15 &   34.2 &    15.65 &    29.41 & -0.274 & RST \\
+NGC0024              &  29 &  107.0 &    11.81 &    10.46 & +0.053 & MOND \\
+NGC0055              &  21 &   86.2 &    25.36 &    51.14 & -0.305 & RST \\
+NGC0100              &  21 &   89.0 &     1.50 &     1.99 & -0.122 & RST \\
+NGC0247              &  26 &  105.5 &    13.02 &     4.36 & +0.475 & MOND \\
+NGC0289              &  28 &  166.0 &     3.48 &    11.62 & -0.524 & RST \\
+NGC0300              &  25 &   94.2 &     7.37 &     2.40 & +0.487 & MOND \\
+NGC0801              &  13 &  216.0 &    59.56 &    86.90 & -0.164 & RST \\
+NGC0891              &  18 &  213.0 &    91.15 &    34.81 & +0.418 & MOND \\
+NGC1003              &  36 &  112.0 &     6.86 &    13.08 & -0.281 & RST \\
+NGC1090              &  24 &  162.0 &    22.23 &    44.28 & -0.299 & RST \\
+NGC1705              &  14 &   71.5 &    15.78 &    14.54 & +0.035 & MOND \\
+NGC2366              &  26 &   49.7 &    10.15 &    25.37 & -0.398 & RST \\
+NGC2403              &  73 &  134.0 &   106.79 &    75.59 & +0.150 & MOND \\
+NGC2683              &  11 &  155.0 &     1.09 &     2.14 & -0.292 & RST \\
+NGC2841              &  50 &  282.5 &    98.18 &    86.26 & +0.056 & MOND \\
+NGC2903              &  34 &  181.5 &    50.26 &    12.60 & +0.601 & MOND \\
+NGC2915              &  30 &   84.7 &    10.43 &     7.61 & +0.137 & MOND \\
+NGC2955              &  24 &  255.5 &    24.13 &     7.96 & +0.482 & MOND \\
+NGC2976              &  27 &   83.8 &     3.42 &     3.04 & +0.051 & MOND \\
+NGC2998              &  13 &  213.0 &     3.84 &    15.47 & -0.605 & RST \\
+NGC3109              &  25 &   66.2 &    11.33 &     5.37 & +0.324 & MOND \\
+NGC3198              &  43 &  148.5 &     1.65 &    13.42 & -0.911 & RST \\
+NGC3521              &  41 &  210.0 &     1.78 &     0.73 & +0.387 & MOND \\
+NGC3726              &  12 &  168.0 &    24.86 &    24.98 & -0.002 & RST \\
+NGC3741              &  21 &   50.1 &     4.86 &     1.35 & +0.556 & MOND \\
+NGC3769              &  12 &  118.0 &     4.13 &     4.66 & -0.053 & RST \\
+NGC3877              &  13 &  170.0 &    16.82 &    13.12 & +0.108 & MOND \\
+NGC3893              &  10 &  176.0 &     1.58 &     0.89 & +0.247 & MOND \\
+NGC3917              &  17 &  137.0 &     4.03 &     2.86 & +0.150 & MOND \\
+NGC3949              &   7 &  165.0 &     6.93 &     2.26 & +0.486 & MOND \\
+NGC3953              &   8 &  223.0 &     2.70 &     2.48 & +0.038 & MOND \\
+NGC3972              &  10 &  134.0 &     2.70 &     1.90 & +0.153 & MOND \\
+NGC3992              &   9 &  241.0 &     9.88 &     9.24 & +0.029 & MOND \\
+NGC4010              &  12 &  124.0 &     3.33 &     3.99 & -0.078 & RST \\
+NGC4013              &  36 &  178.0 &    10.13 &     7.49 & +0.131 & MOND \\
+NGC4051              &   7 &  154.0 &    14.47 &    11.42 & +0.103 & MOND \\
+NGC4068              &   6 &   36.0 &    13.69 &    24.49 & -0.253 & RST \\
+NGC4085              &   7 &  133.0 &    18.96 &    13.13 & +0.160 & MOND \\
+NGC4088              &  12 &  171.0 &    45.84 &    35.89 & +0.106 & MOND \\
+NGC4100              &  24 &  158.5 &     2.73 &     3.39 & -0.094 & RST \\
+NGC4138              &   7 &  147.0 &     0.72 &     1.21 & -0.229 & RST \\
+NGC4157              &  17 &  185.5 &    11.66 &     9.09 & +0.108 & MOND \\
+NGC4183              &  23 &  110.0 &     1.53 &     3.69 & -0.382 & RST \\
+NGC4214              &  14 &   80.6 &     5.45 &     5.67 & -0.017 & RST \\
+NGC4217              &  19 &  177.5 &    86.38 &    55.71 & +0.190 & MOND \\
+NGC4389              &   6 &   95.9 &    62.99 &    54.01 & +0.067 & MOND \\
+NGC4559              &  32 &  121.5 &     7.52 &    13.89 & -0.266 & RST \\
+NGC5005              &  18 &  264.5 &     3.26 &     0.54 & +0.778 & MOND \\
+NGC5033              &  22 &  193.0 &    19.67 &    13.86 & +0.152 & MOND \\
+NGC5055              &  28 &  179.0 &  1365.96 &   770.51 & +0.249 & MOND \\
+NGC5371              &  19 &  208.5 &   172.14 &   170.72 & +0.004 & MOND \\
+NGC5585              &  24 &   90.8 &    22.01 &    26.21 & -0.076 & RST \\
+NGC5907              &  19 &  215.5 &     9.90 &    33.57 & -0.530 & RST \\
+NGC5985              &  33 &  292.5 &   154.96 &   158.40 & -0.010 & RST \\
+NGC6015              &  44 &  155.0 &    27.65 &    32.01 & -0.064 & RST \\
+NGC6195              &  23 &  254.0 &    54.13 &    26.57 & +0.309 & MOND \\
+NGC6503              &  31 &  115.0 &    17.80 &     2.81 & +0.802 & MOND \\
+NGC6674              &  15 &  242.0 &    74.80 &    24.53 & +0.484 & MOND \\
+NGC6946              &  58 &  158.0 &    55.37 &    25.66 & +0.334 & MOND \\
+NGC7331              &  36 &  239.0 &    65.88 &    36.00 & +0.262 & MOND \\
+NGC7793              &  46 &  109.0 &     1.27 &     0.91 & +0.145 & MOND \\
+NGC7814              &  18 &  214.0 &    18.60 &    27.26 & -0.166 & RST \\
+PGC51017             &   6 &   18.3 &   105.22 &   131.44 & -0.097 & RST \\
+UGC00128             &  22 &  132.0 &   212.43 &    96.97 & +0.341 & MOND \\
+UGC00191             &   9 &   81.0 &     8.85 &    29.68 & -0.526 & RST \\
+UGC00731             &  12 &   73.9 &    18.15 &    16.36 & +0.045 & MOND \\
+UGC00891             &   5 &   60.1 &     7.18 &    47.48 & -0.820 & RST \\
+UGC01230             &  11 &  103.0 &     2.68 &     3.69 & -0.138 & RST \\
+UGC01281             &  25 &   55.4 &     0.74 &     1.12 & -0.180 & RST \\
+UGC02023             &   5 &   47.9 &     1.56 &     2.56 & -0.215 & RST \\
+UGC02259             &   8 &   88.3 &    85.57 &    45.61 & +0.273 & MOND \\
+UGC02455             &   8 &   53.1 &   126.54 &   125.21 & +0.005 & MOND \\
+UGC02487             &  17 &  331.0 &   362.92 &   261.40 & +0.143 & MOND \\
+UGC02885             &  19 &  298.0 &     3.36 &     2.83 & +0.074 & MOND \\
+UGC02916             &  43 &  209.5 &   225.66 &    75.87 & +0.473 & MOND \\
+UGC02953             & 115 &  264.0 &   125.96 &   200.40 & -0.202 & RST \\
+UGC03205             &  48 &  219.0 &     8.25 &    12.14 & -0.168 & RST \\
+UGC03546             &  30 &  193.0 &    48.40 &    12.24 & +0.597 & MOND \\
+UGC03580             &  47 &  122.0 &   125.72 &    87.56 & +0.157 & MOND \\
+UGC04278             &  25 &   88.2 &     3.98 &     2.78 & +0.155 & MOND \\
+UGC04305             &  22 &   35.1 &    50.92 &    68.66 & -0.130 & RST \\
+UGC04325             &   8 &   91.6 &    40.79 &    29.35 & +0.143 & MOND \\
+UGC04483             &   8 &   24.2 &     5.29 &    11.25 & -0.328 & RST \\
+UGC04499             &   9 &   73.3 &     2.47 &     9.57 & -0.588 & RST \\
+UGC05005             &  11 &   99.4 &     0.76 &     2.46 & -0.513 & RST \\
+UGC05253             &  73 &  243.5 &    45.07 &     6.91 & +0.814 & MOND \\
+UGC05414             &   6 &   56.8 &     4.25 &    11.13 & -0.418 & RST \\
+UGC05716             &  12 &   73.0 &    89.14 &    37.51 & +0.376 & MOND \\
+UGC05721             &  23 &   78.6 &    13.43 &    12.32 & +0.037 & MOND \\
+UGC05750             &  11 &   77.6 &     1.15 &     3.21 & -0.445 & RST \\
+UGC05764             &  10 &   50.0 &   397.87 &   219.66 & +0.258 & MOND \\
+UGC05829             &  11 &   65.6 &     0.70 &     2.85 & -0.609 & RST \\
+UGC05918             &   8 &   42.6 &     0.72 &     1.21 & -0.227 & RST \\
+UGC05986             &  15 &  109.0 &    44.70 &    30.09 & +0.172 & MOND \\
+UGC05999             &   5 &   97.7 &     2.06 &     5.80 & -0.449 & RST \\
+UGC06399             &   9 &   85.6 &     3.38 &     0.77 & +0.644 & MOND \\
+UGC06446             &  17 &   83.8 &     9.71 &     4.88 & +0.299 & MOND \\
+UGC06614             &  13 &  204.0 &    11.16 &     9.89 & +0.053 & MOND \\
+UGC06628             &   7 &   42.3 &    11.96 &    16.36 & -0.136 & RST \\
+UGC06667             &   9 &   85.0 &    43.03 &    26.66 & +0.208 & MOND \\
+UGC06786             &  45 &  226.0 &   159.89 &   169.81 & -0.026 & RST \\
+UGC06787             &  71 &  247.0 &   139.91 &   200.02 & -0.155 & RST \\
+UGC06818             &   8 &   71.2 &     5.47 &     8.37 & -0.185 & RST \\
+UGC06917             &  11 &  110.0 &     4.39 &     1.44 & +0.485 & MOND \\
+UGC06923             &   6 &   79.3 &     1.38 &     2.21 & -0.203 & RST \\
+UGC06930             &  10 &  108.0 &     1.12 &     2.53 & -0.354 & RST \\
+UGC06973             &   9 &  178.0 &   152.71 &    90.98 & +0.225 & MOND \\
+UGC06983             &  17 &  108.5 &     7.92 &     3.62 & +0.340 & MOND \\
+UGC07089             &  12 &   77.6 &     4.55 &    10.02 & -0.342 & RST \\
+UGC07125             &  13 &   65.1 &    77.73 &   142.51 & -0.263 & RST \\
+UGC07151             &  11 &   74.0 &     2.98 &     3.78 & -0.103 & RST \\
+UGC07261             &   7 &   74.7 &     0.83 &     0.66 & +0.095 & MOND \\
+UGC07323             &  10 &   82.8 &     2.47 &     5.77 & -0.369 & RST \\
+UGC07399             &  10 &  103.0 &    96.67 &    76.40 & +0.102 & MOND \\
+UGC07524             &  31 &   80.3 &     2.14 &     5.30 & -0.394 & RST \\
+UGC07559             &   7 &   31.1 &     5.49 &    10.49 & -0.281 & RST \\
+UGC07577             &   9 &   15.9 &    11.35 &    17.57 & -0.190 & RST \\
+UGC07603             &  12 &   63.0 &     9.30 &     5.63 & +0.218 & MOND \\
+UGC07608             &   8 &   66.0 &     2.99 &     1.31 & +0.358 & MOND \\
+UGC07690             &   7 &   56.9 &     2.35 &     2.05 & +0.059 & MOND \\
+UGC07866             &   7 &   30.6 &     1.64 &     3.94 & -0.382 & RST \\
+UGC08286             &  17 &   83.7 &    52.01 &    27.17 & +0.282 & MOND \\
+UGC08490             &  30 &   77.6 &    11.39 &     5.79 & +0.293 & MOND \\
+UGC08550             &  11 &   57.5 &     6.93 &     2.57 & +0.431 & MOND \\
+UGC08699             &  41 &  181.5 &     4.28 &     6.44 & -0.178 & RST \\
+UGC08837             &   8 &   46.6 &    23.61 &    40.32 & -0.232 & RST \\
+UGC09037             &  22 &  152.0 &    43.13 &    45.64 & -0.025 & RST \\
+UGC09133             &  68 &  228.0 &    27.25 &    68.34 & -0.399 & RST \\
+UGC09992             &   5 &   33.4 &     4.35 &     7.32 & -0.225 & RST \\
+UGC10310             &   7 &   72.4 &     1.36 &     2.48 & -0.261 & RST \\
+UGC11455             &  36 &  272.0 &    11.53 &     6.79 & +0.230 & MOND \\
+UGC11557             &  12 &   81.6 &    17.46 &    20.69 & -0.074 & RST \\
+UGC11820             &  10 &   81.2 &    19.67 &   132.95 & -0.830 & RST \\
+UGC11914             &  65 &  283.5 &    10.01 &    69.81 & -0.843 & RST \\
+UGC12506             &  31 &  230.0 &     9.81 &     7.90 & +0.094 & MOND \\
+UGC12632             &  15 &   73.1 &     3.81 &     7.10 & -0.271 & RST \\
+UGC12732             &  16 &   93.2 &     4.70 &     3.78 & +0.095 & MOND \\
+UGCA281              &   7 &   28.8 &     0.80 &     3.35 & -0.625 & RST \\
+UGCA442              &   8 &   56.5 &     2.75 &     4.44 & -0.207 & RST \\
+UGCA444              &  36 &   35.6 &     0.39 &     2.01 & -0.716 & RST \\
+\end{longtable}
+
+
+%===================================================================
+\begin{thebibliography}{99}
+%===================================================================
+
+\bibitem{Wells2026a}
+A.~R. Wells,
+``The compact fiber as the canonical admissibility structure for discrete scalar motion: a necessity result for the Reciprocal System,''
+Zenodo, 2026.
+\texttt{doi:10.5281/zenodo.19423877}.
+
+\bibitem{Wells2026b}
+A.~R. Wells,
+``Atomic structure from the compact fiber: transport, screening, and spectroscopic thresholds in the Reciprocal System,''
+Zenodo, 2026.
+\texttt{doi:10.5281/zenodo.19426034}.
+
+\bibitem{Wells2026c}
+A.~R. Wells,
+``Effective quantum and gravitational structure from the compact fiber: cross-frame projection, Hilbert representation, Born rule, and coordinate-time metric,''
+Zenodo, 2026.
+\texttt{doi:10.5281/zenodo.19434652}.
+
+\bibitem{Larson1979}
+D.~B. Larson,
+\emph{Nothing But Motion},
+North Pacific Publishers, Portland, OR, 1979.
+
+\bibitem{Milgrom1983}
+M.~Milgrom,
+``A modification of the Newtonian dynamics as a possible alternative to the hidden mass hypothesis,''
+\emph{Astrophys. J.} \textbf{270}, 365--370, 1983.
+
+\bibitem{Lelli2016}
+F.~Lelli, S.~S. McGaugh, and J.~M. Schombert,
+``SPARC: Mass Models for 175 Disk Galaxies with Spitzer Photometry and Accurate Rotation Curves,''
+\emph{Astron. J.} \textbf{152}, 157, 2016.
+
+\bibitem{McGaugh2016}
+S.~S. McGaugh, F.~Lelli, and J.~M. Schombert,
+``Radial Acceleration Relation in Rotationally Supported Galaxies,''
+\emph{Phys. Rev. Lett.} \textbf{117}, 201101, 2016.
+
+\bibitem{Nehru1985}
+K.~V.~K. Nehru,
+``Precession of the Planetary Perihelia Due to the Co-ordinate Time,''
+\emph{Reciprocity} \textbf{XIV}(1), 11--13, 1985.
+
+\bibitem{Will2014}
+C.~M. Will,
+``The Confrontation between General Relativity and Experiment,''
+\emph{Living Rev. Relativ.} \textbf{17}, 4, 2014.
+
+\bibitem{Bertotti2003}
+B.~Bertotti, L.~Iess, and P.~Tortora,
+``A test of general relativity using radio links with the Cassini spacecraft,''
+\emph{Nature} \textbf{425}, 374--376, 2003.
+
+\bibitem{LIGO2017}
+B.~P. Abbott et al.\ (LIGO/Virgo Collaboration),
+``Gravitational Waves and Gamma-Rays from a Binary Neutron Star Merger: GW170817 and GRB 170817A,''
+\emph{Astrophys. J. Lett.} \textbf{848}, L13, 2017.
+
+\end{thebibliography}
+
+\end{document}

@@ -1,0 +1,38 @@
+cff-version: 1.2.0
+message: "If you use this work, please cite the corresponding Zenodo record."
+title: "Galactic Rotation from the Compact Fiber"
+authors:
+  - family-names: Wells
+    given-names: A. R.
+    orcid: "https://orcid.org/0009-0003-1053-9421"
+    affiliation: "Dual-Frame Research Group"
+version: "1.0.0"
+date-released: 2026-04-06
+license: CC-BY-4.0
+repository-code: "https://github.com/arwells-research/compact-fiber-galactic-rotation"
+abstract: >-
+  This repository contains the LaTeX source and reproducibility code for
+  the paper "Galactic Rotation from the Compact Fiber: The Gravitational
+  Limit, R^{16}, and a Zero-Parameter Rotation-Curve Model". The paper
+  derives a galactic acceleration scale and coherence length from the
+  compact fiber framework (Papers I-III) and tests the resulting
+  zero-parameter rotation-curve model against 171 SPARC galaxies.
+keywords:
+  - compact fiber
+  - galactic rotation curves
+  - gravitational limit
+  - MOND
+  - SPARC
+  - zero-parameter model
+  - nonlocal kinematics
+  - inter-regional ratio
+preferred-citation:
+  type: article
+  authors:
+    - family-names: Wells
+      given-names: A. R.
+      orcid: "https://orcid.org/0009-0003-1053-9421"
+      affiliation: "Dual-Frame Research Group"
+  title: "Galactic Rotation from the Compact Fiber: The Gravitational Limit, R^{16}, and a Zero-Parameter Rotation-Curve Model"
+  year: 2026
+  publisher: Zenodo
